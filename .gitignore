@@ -1,0 +1,44 @@
+# Ignore HELP.md in all directories
+**/HELP.md
+
+# Ignore target directories
+**/target/
+
+# Exclude maven-wrapper.jar from being ignored
+!.mvn/wrapper/maven-wrapper.jar
+
+# Include target directories in src/main/** and src/test/** subdirectories
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Ignore mariadb directory in the root
+/mariadb
+
+### STS ###
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.springBeans
+**/.sts4-cache
+
+### IntelliJ IDEA ###
+**/.idea
+**/*.iws
+**/*.iml
+**/*.ipr
+
+### NetBeans ###
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/.nb-gradle/
+**/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+**/.vscode/
+
