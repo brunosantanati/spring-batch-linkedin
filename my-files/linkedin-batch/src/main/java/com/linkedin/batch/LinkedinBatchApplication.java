@@ -31,6 +31,34 @@ public class LinkedinBatchApplication {
 	}
 	
 	@Bean
+	public JobExecutionDecider receiptDecider() {
+		return new ReceiptDecider();
+	}
+	
+	@Bean
+	public Step thankCustomerStep() {
+		return this.stepBuilderFactory.get("thankCustomerStep").tasklet(new Tasklet() {
+			
+			@Override
+			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+				System.out.println("Thanking the customer.");
+				return RepeatStatus.FINISHED;
+			}
+		}).build();
+	}
+	
+	@Bean
+	public Step refundStep() {
+		return this.stepBuilderFactory.get("refundStep").tasklet(new Tasklet() {
+			
+			@Override
+			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+				System.out.println("Refunding customer money.");
+				return RepeatStatus.FINISHED;
+			}
+		}).build();
+	}
+	@Bean
 	public Step leaveAtDoorStep() {
 		return this.stepBuilderFactory.get("leaveAtDoorStep").tasklet(new Tasklet() {
 			
@@ -109,6 +137,8 @@ public class LinkedinBatchApplication {
 				.from(driveToAddressStep())
 					.on("*").to(decider())
 						.on("PRESENT").to(givePackageToCustomerStep())
+							.next(receiptDecider()).on("CORRECT").to(thankCustomerStep())
+							.from(receiptDecider()).on("INCORRECT").to(refundStep())
 					.from(decider())
 						.on("NOT_PRESENT").to(leaveAtDoorStep())
 				.end()
