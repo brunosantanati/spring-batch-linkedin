@@ -43,6 +43,9 @@ select * from BATCH_JOB_EXECUTION_PARAMS\G
 Run:
 mvn clean package
 and after that, inside target folder, run:
-java -jar linkedin-batch-02-03-end-0.0.1-SNAPSHOT.jar item=shoes
-java -jar linkedin-batch-02-03-end-0.0.1-SNAPSHOT.jar "item=shoes" "run.date(date)=2020/01/01"
+java -jar linkedin-batch-0.0.1-SNAPSHOT.jar item=shoes
+java -jar linkedin-batch-0.0.1-SNAPSHOT.jar "item=shoes" "run.date(date)=2020/01/01"
+OR
+Use the script:
+./run_delivery_job.sh
 ```
