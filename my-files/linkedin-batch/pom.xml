@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linkedin</groupId>
-	<artifactId>linkedin-batch-02-03-end</artifactId>
+	<artifactId>linkedin-batch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>linkedin-batch</name>
 	<description>This is a simple batch application</description>

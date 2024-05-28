@@ -23,6 +23,30 @@ public class LinkedinBatchApplication {
 	
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
+		
+	@Bean
+	public Step givePackageToCustomerStep() {
+		return this.stepBuilderFactory.get("givePackageToCustomer").tasklet(new Tasklet() {
+			
+			@Override
+			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+				System.out.println("Given the package to the customer.");
+				return RepeatStatus.FINISHED;
+			}
+		}).build();
+	}
+
+	@Bean
+	public Step driveToAddressStep() {
+		return this.stepBuilderFactory.get("driveToAddressStep").tasklet(new Tasklet() {
+			
+			@Override
+			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+				System.out.println("Successfully arrived at the address.");
+				return RepeatStatus.FINISHED;
+			}
+		}).build();
+	}
 	
 	@Bean
 	public Step packageItemStep() {
@@ -32,8 +56,9 @@ public class LinkedinBatchApplication {
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 				String item = chunkContext.getStepContext().getJobParameters().get("item").toString();
 				String date = chunkContext.getStepContext().getJobParameters().get("run.date").toString();
+				String lesson = chunkContext.getStepContext().getJobParameters().get("lesson").toString();
 				
-				System.out.println(String.format("The %s has been packaged on %s.", item, date));
+				System.out.println(String.format("The %s has been packaged on %s. Lesson: %s.", item, date, lesson));
 				return RepeatStatus.FINISHED;
 			}
 		}).build(); 
@@ -41,7 +66,11 @@ public class LinkedinBatchApplication {
 	
 	@Bean
 	public Job deliverPackageJob() {
-		return this.jobBuilderFactory.get("deliverPackageJob").start(packageItemStep()).build();
+		return this.jobBuilderFactory.get("deliverPackageJob")
+				.start(packageItemStep())
+				.next(driveToAddressStep())
+				.next(givePackageToCustomerStep())
+				.build();
 	}
 
 
