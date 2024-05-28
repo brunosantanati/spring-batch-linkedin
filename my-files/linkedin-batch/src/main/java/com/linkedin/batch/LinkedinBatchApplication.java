@@ -97,7 +97,7 @@ public class LinkedinBatchApplication {
 	@Bean
 	public Step driveToAddressStep() {
 		
-		boolean GOT_LOST = false;
+		boolean GOT_LOST = true;
 		return this.stepBuilderFactory.get("driveToAddressStep").tasklet(new Tasklet() {
 			
 			@Override
@@ -133,7 +133,8 @@ public class LinkedinBatchApplication {
 		return this.jobBuilderFactory.get("deliverPackageJob")
 				.start(packageItemStep())
 				.next(driveToAddressStep())
-					.on("FAILED").to(storePackageStep())
+					//.on("FAILED").to(storePackageStep())
+				.on("FAILED").stop()
 				.from(driveToAddressStep())
 					.on("*").to(decider())
 						.on("PRESENT").to(givePackageToCustomerStep())
