@@ -38,10 +38,17 @@ public class LinkedinBatchApplication {
 
 	@Bean
 	public Step driveToAddressStep() {
+		
+		boolean GOT_LOST = false;
 		return this.stepBuilderFactory.get("driveToAddressStep").tasklet(new Tasklet() {
 			
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+				
+				if(GOT_LOST) {
+					throw new RuntimeException("Got lost driving to the address");
+				}
+
 				System.out.println("Successfully arrived at the address.");
 				return RepeatStatus.FINISHED;
 			}
@@ -56,9 +63,8 @@ public class LinkedinBatchApplication {
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 				String item = chunkContext.getStepContext().getJobParameters().get("item").toString();
 				String date = chunkContext.getStepContext().getJobParameters().get("run.date").toString();
-				String lesson = chunkContext.getStepContext().getJobParameters().get("lesson").toString();
 				
-				System.out.println(String.format("The %s has been packaged on %s. Lesson: %s.", item, date, lesson));
+				System.out.println(String.format("The %s has been packaged on %s.", item, date));
 				return RepeatStatus.FINISHED;
 			}
 		}).build(); 
