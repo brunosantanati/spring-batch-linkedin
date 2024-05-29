@@ -38,6 +38,34 @@ public class LinkedinBatchApplication {
 	public JobExecutionDecider receiptDecider() {
 		return new ReceiptDecider();
 	}
+	
+	@Bean
+	public StepExecutionListener selectFlowerListener() {
+		return new FlowersSelectionStepExecutionListener();
+	}
+	
+	@Bean
+	public Step nestedBillingJobStep() {
+		return this.stepBuilderFactory.get("nestedBillingJobStep").job(billingJob()).build();
+	}
+
+	@Bean
+	public Step sendInvoiceStep() {
+		return this.stepBuilderFactory.get("invoiceStep").tasklet(new Tasklet() {
+			
+			@Override
+			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+				System.out.println("Invoice is sent to the customer");
+				return RepeatStatus.FINISHED; 
+			}
+		}).build();
+
+	}
+	
+	@Bean
+	public Job billingJob() {
+		return this.jobBuilderFactory.get("billingJob").start(sendInvoiceStep()).build();
+	}
 
 	@Bean
 	public Flow deliveryFlow() {
@@ -52,12 +80,7 @@ public class LinkedinBatchApplication {
 						.on("NOT_PRESENT").to(leaveAtDoorStep()).build();
 
 	}
-	
-	@Bean
-	public StepExecutionListener selectFlowerListener() {
-		return new FlowersSelectionStepExecutionListener();
-	}
-	
+
 	@Bean
     public Step selectFlowersStep() {
         return this.stepBuilderFactory.get("selectFlowersStep").tasklet(new Tasklet() {
@@ -207,6 +230,7 @@ public class LinkedinBatchApplication {
 		return this.jobBuilderFactory.get("deliverPackageJob")
 				.start(packageItemStep())
 				.on("*").to(deliveryFlow())
+				.next(nestedBillingJobStep())
 				.end()
 				.build();
 	}
