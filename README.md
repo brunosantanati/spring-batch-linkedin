@@ -51,7 +51,4 @@ Use the script:
 
 Run prepareFlowersJob:
 ./run_flowers_job.sh roses
-
-Run job with chunk based step:
-./run_job.sh
 ```
