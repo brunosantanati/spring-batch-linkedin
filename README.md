@@ -40,7 +40,7 @@ select * from BATCH_JOB_INSTANCE\G
 select * from BATCH_STEP_EXECUTION\G
 select * from BATCH_JOB_EXECUTION_PARAMS\G
 
-Run:
+Run deliverPackageJob:
 mvn clean package
 and after that, inside target folder, run:
 java -jar linkedin-batch-0.0.1-SNAPSHOT.jar item=shoes
@@ -48,4 +48,7 @@ java -jar linkedin-batch-0.0.1-SNAPSHOT.jar "item=shoes" "run.date(date)=2020/01
 OR
 Use the script:
 ./run_delivery_job.sh
+
+Run prepareFlowersJob:
+./run_flowers_job.sh roses
 ```
